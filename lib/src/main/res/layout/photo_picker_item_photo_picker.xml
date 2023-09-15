@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="90pt"
+    android:layout_height="90pt">
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/view_foreground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#33333333" />
+
+    <me.twc.photopicker.lib.widget.TextRadioButton
+        android:id="@+id/radio_button"
+        android:layout_width="40pt"
+        android:layout_height="40pt"
+        android:layout_gravity="top|end"
+        android:padding="8pt" />
+</FrameLayout>
