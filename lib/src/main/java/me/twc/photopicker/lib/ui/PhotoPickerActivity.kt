@@ -3,17 +3,14 @@ package me.twc.photopicker.lib.ui
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build.VERSION_CODES.S
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContract
 import com.blankj.utilcode.util.BarUtils
-import kotlinx.coroutines.selects.whileSelect
 import me.twc.photopicker.lib.AlbumModel
 import me.twc.photopicker.lib.data.Input
 import me.twc.photopicker.lib.data.Output
 import me.twc.photopicker.lib.databinding.PhotoPickerActPhotoPickerBinding
 import me.twc.photopicker.lib.utils.applySingleDebouncing500
-import kotlin.concurrent.thread
 
 /**
  * @author 唐万超
@@ -43,6 +40,7 @@ class PhotoPickerActivity : BaseActivity() {
     }
 
     //<editor-fold desc="初始化">
+    @Suppress("DEPRECATION")
     private fun parseIntent(block: () -> Unit) {
         val input = intent.getSerializableExtra(KEY_EXTRA_INPUT) as? Input
         if (input == null) {
