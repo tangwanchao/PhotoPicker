@@ -2,13 +2,17 @@ package me.twc.photopicker.lib.ui
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build.VERSION_CODES.S
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContract
+import com.blankj.utilcode.util.BarUtils
+import kotlinx.coroutines.selects.whileSelect
 import me.twc.photopicker.lib.AlbumModel
 import me.twc.photopicker.lib.data.Input
 import me.twc.photopicker.lib.data.Output
 import me.twc.photopicker.lib.databinding.PhotoPickerActPhotoPickerBinding
+import me.twc.photopicker.lib.utils.applySingleDebouncing500
 import kotlin.concurrent.thread
 
 /**
@@ -28,24 +32,37 @@ class PhotoPickerActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.statusBarColor = Color.parseColor("#333333")
+        BarUtils.setStatusBarLightMode(this, false)
         setContentView(mBinding.root)
         parseIntent {
             initView()
             loadItems()
+            initListener()
         }
     }
 
     //<editor-fold desc="初始化">
     private fun parseIntent(block: () -> Unit) {
-        mInput = intent.getSerializableExtra(KEY_EXTRA_INPUT) as? Input ?: return
+        val input = intent.getSerializableExtra(KEY_EXTRA_INPUT) as? Input
+        if (input == null) {
+            finish()
+            return
+        }
+        mInput = input
         mAdapter = PhotoPickerAdapter(mInput.imageEngine)
         block()
     }
 
     private fun initView() = mBinding.apply {
-        val itemDecoration = VerticalSpaceItemDecoration()
-        recyclerView.addItemDecoration(itemDecoration)
+        tvTitle.text = mInput.supportMedia.title
+        recyclerView.addItemDecoration(VerticalSpaceItemDecoration())
         recyclerView.adapter = mAdapter
+    }
+
+    private fun initListener() = mBinding.apply {
+        @Suppress("DEPRECATION")
+        ivClose.applySingleDebouncing500 { onBackPressed() }
     }
 
     private fun loadItems() {

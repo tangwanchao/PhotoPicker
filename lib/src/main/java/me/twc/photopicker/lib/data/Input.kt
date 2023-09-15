@@ -18,7 +18,7 @@ import java.io.Serializable
  */
 open class Input(
     val imageEngine: ImageEngine,
-    private val supportMedia: SupportMedia,
+    val supportMedia: SupportMedia,
 ) : Serializable {
 
     companion object {

@@ -6,19 +6,21 @@ package me.twc.photopicker.lib.enums
  *
  * 选择器支持的内容
  */
-enum class SupportMedia {
+enum class SupportMedia(
+    val title: String
+) {
     /**
      * 仅支持图片
      */
-    IMAGE,
+    IMAGE("选择照片"),
 
     /**
      * 仅支持视屏
      */
-    VIDEO,
+    VIDEO("选择视屏"),
 
     /**
      * 支持视屏和图片
      */
-    IMAGE_AND_VIDEO
+    IMAGE_AND_VIDEO("选择视屏/照片")
 }

@@ -2,15 +2,44 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2C2C2C">
 
+    <FrameLayout
+        android:id="@+id/fl_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48pt"
+        android:background="#333333"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="48pt"
+            android:layout_height="48pt"
+            android:padding="10pt"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_close_white" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textSize="17pt"
+            tools:text="选择照片" />
+    </FrameLayout>
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0pt"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fl_action_bar"
         app:spanCount="4" />
 </androidx.constraintlayout.widget.ConstraintLayout>
