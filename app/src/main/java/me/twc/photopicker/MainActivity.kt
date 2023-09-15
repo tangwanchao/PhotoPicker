@@ -17,6 +17,7 @@ import me.twc.photopicker.lib.AlbumModel
 import me.twc.photopicker.lib.data.Input
 import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.enums.SupportMedia
+import me.twc.photopicker.lib.manager.PhotoPickerManager
 import me.twc.photopicker.lib.ui.PhotoPickerActivity
 import me.twc.photopicker.lib.utils.applySingleDebouncing500
 import kotlin.concurrent.thread
@@ -40,6 +41,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        PhotoPickerManager.init(application)
         mBinding.btnLaunch.applySingleDebouncing500 {
             PermissionUtils.permission(
                 Manifest.permission.READ_MEDIA_IMAGES,
