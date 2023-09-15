@@ -33,13 +33,6 @@ class PhotoPickerActivity : BaseActivity() {
             initView()
             loadItems()
         }
-
-        thread {
-            while (true){
-                Thread.sleep(3000L)
-                System.gc()
-            }
-        }
     }
 
     //<editor-fold desc="初始化">
