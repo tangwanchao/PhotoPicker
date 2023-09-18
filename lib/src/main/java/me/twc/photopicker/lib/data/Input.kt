@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import me.twc.photopicker.lib.data.filter.VideoFilter
 import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.utils.CursorUtil
@@ -18,10 +19,13 @@ import java.io.Serializable
 open class Input(
     val imageEngine: ImageEngine,
     val supportMedia: SupportMedia,
+    val videoFilter: VideoFilter = VideoFilter()
 ) : Serializable {
 
     companion object {
         const val EXTERNAL = "external"
+        const val VIDEO_DURATION_SELECTION = "(${MediaStore.MediaColumns.DURATION}>=? AND ${MediaStore.MediaColumns.DURATION}<=?)"
+        const val FILE_TYPE_SELECTION = "(${MediaStore.Files.FileColumns.MEDIA_TYPE}=? OR ${MediaStore.Files.FileColumns.MEDIA_TYPE}=?"
     }
 
     open fun getContentUri(): Uri = when (supportMedia) {
@@ -30,25 +34,42 @@ open class Input(
         SupportMedia.IMAGE_AND_VIDEO -> MediaStore.Files.getContentUri(EXTERNAL)
     }
 
-    open fun getProjections(): Array<String>? = arrayOf(
+    open fun getProjections(): Array<String>? = mutableListOf(
         MediaStore.MediaColumns._ID,
         MediaStore.MediaColumns.DATA,
         MediaStore.MediaColumns.MIME_TYPE
-    )
+    ).apply {
+        if (videoFilter.queryDuration) {
+            add(MediaStore.MediaColumns.DURATION)
+        }
+    }.toTypedArray()
 
     open fun getSelection(): String? = when (supportMedia) {
         SupportMedia.IMAGE -> null
-        SupportMedia.VIDEO -> null
-        SupportMedia.IMAGE_AND_VIDEO -> "(" + MediaStore.Files.FileColumns.MEDIA_TYPE + "=?" + " OR " + MediaStore.Files.FileColumns.MEDIA_TYPE + "=?)"
+        SupportMedia.VIDEO -> if (videoFilter.queryDuration) VIDEO_DURATION_SELECTION else null
+        SupportMedia.IMAGE_AND_VIDEO -> "$FILE_TYPE_SELECTION AND $VIDEO_DURATION_SELECTION"
     }
 
     open fun getSelectionArgs(): Array<String>? = when (supportMedia) {
         SupportMedia.IMAGE -> null
-        SupportMedia.VIDEO -> null
-        SupportMedia.IMAGE_AND_VIDEO -> arrayOf(
+        SupportMedia.VIDEO -> mutableListOf<String>()
+            .apply {
+                if (videoFilter.queryDuration) {
+                    add(videoFilter.minDuration.toString())
+                    add(videoFilter.maxDuration.toString())
+                }
+            }.toTypedArray()
+
+        SupportMedia.IMAGE_AND_VIDEO -> mutableListOf(
             MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
             MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
-        )
+        ).apply {
+            if (videoFilter.queryDuration) {
+                add(videoFilter.minDuration.toString())
+                add(videoFilter.maxDuration.toString())
+            }
+        }
+            .toTypedArray()
     }
 
     open fun getQuerySortOrder(): String? = MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC"
@@ -61,7 +82,14 @@ open class Input(
         if (path.isBlank()) return null
         if (type.isBlank()) return null
         if (!isSupportType(type)) return null
-        return PhotoItem(id, path, uri, type)
+        return if (type.isVideoType()) {
+            val duration = if (videoFilter.queryDuration) {
+                CursorUtil.getCursorLong(cursor, MediaStore.MediaColumns.DURATION) ?: VideoItem.DEFAULT_DURATION
+            } else VideoItem.DEFAULT_DURATION
+            VideoItem(id, path, uri, type, duration)
+        } else {
+            PhotoItem(id, path, uri, type)
+        }
     }
 
     open fun isSupportType(type: String): Boolean = when (supportMedia) {

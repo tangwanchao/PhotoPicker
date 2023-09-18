@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import me.twc.photopicker.databinding.ActMainBinding
 import me.twc.photopicker.lib.AlbumModel
 import me.twc.photopicker.lib.data.Input
+import me.twc.photopicker.lib.data.filter.VideoFilter
 import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.manager.PhotoPickerManager
@@ -51,7 +52,12 @@ class MainActivity : ComponentActivity() {
                     override fun onGranted() {
                         val input = Input(
                             imageEngine = GlideEngine,
-                            supportMedia = SupportMedia.IMAGE
+                            supportMedia = SupportMedia.VIDEO,
+                            videoFilter = VideoFilter(
+                                queryDuration = true,
+                                minDuration = 13000L,
+                                maxDuration = 14000L
+                            )
                         )
                         mPhotoPickerLauncher.launch(input)
                     }
