@@ -1,14 +1,19 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package me.twc.photopicker.lib.data
 
 import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import me.twc.photopicker.lib.data.filter.ImageFilter
 import me.twc.photopicker.lib.data.filter.VideoFilter
 import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.utils.CursorUtil
 import java.io.Serializable
+import java.lang.StringBuilder
+import java.util.Locale
 
 /**
  * @author 唐万超
@@ -19,13 +24,16 @@ import java.io.Serializable
 open class Input(
     val imageEngine: ImageEngine,
     val supportMedia: SupportMedia,
-    val videoFilter: VideoFilter = VideoFilter()
+    val videoFilter: VideoFilter = VideoFilter(),
+    val imageFilter: ImageFilter = ImageFilter()
 ) : Serializable {
 
     companion object {
         const val EXTERNAL = "external"
-        const val VIDEO_DURATION_SELECTION = "(${MediaStore.MediaColumns.DURATION}>=? AND ${MediaStore.MediaColumns.DURATION}<=?)"
-        const val FILE_TYPE_SELECTION = "(${MediaStore.Files.FileColumns.MEDIA_TYPE}=? OR ${MediaStore.Files.FileColumns.MEDIA_TYPE}=?"
+        const val IMAGE_TYPE_SELECTION = "(${MediaStore.Files.FileColumns.MEDIA_TYPE}=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE})"
+        const val VIDEO_TYPE_SELECTION = "(${MediaStore.Files.FileColumns.MEDIA_TYPE}=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO})"
+        const val FILE_DURATION_SELECTION = "(${MediaStore.MediaColumns.DURATION}>=? AND ${MediaStore.MediaColumns.DURATION}<=?)"
+        const val FILE_SIZE_SELECTION = "(${MediaStore.MediaColumns.SIZE}>=? AND ${MediaStore.MediaColumns.SIZE}<=?)"
     }
 
     open fun getContentUri(): Uri = when (supportMedia) {
@@ -45,30 +53,85 @@ open class Input(
     }.toTypedArray()
 
     open fun getSelection(): String? = when (supportMedia) {
-        SupportMedia.IMAGE -> null
-        SupportMedia.VIDEO -> if (videoFilter.queryDuration) VIDEO_DURATION_SELECTION else null
-        SupportMedia.IMAGE_AND_VIDEO -> "$FILE_TYPE_SELECTION AND $VIDEO_DURATION_SELECTION"
+        SupportMedia.IMAGE -> {
+            val sb = StringBuilder()
+            if (imageFilter.querySize) {
+                sb.append(FILE_SIZE_SELECTION)
+            }
+            sb.toStringEmptyNull()
+        }
+
+        SupportMedia.VIDEO -> {
+            val sb = StringBuilder()
+            if (videoFilter.querySize) {
+                sb.append(FILE_SIZE_SELECTION)
+            }
+            if (videoFilter.queryDuration) {
+                sb.andAppend(FILE_DURATION_SELECTION)
+            }
+            sb.toStringEmptyNull()
+        }
+
+        SupportMedia.IMAGE_AND_VIDEO -> {
+            // image
+            val sb = StringBuilder("(")
+            sb.append(IMAGE_TYPE_SELECTION)
+            if (imageFilter.querySize) {
+                sb.andAppend(FILE_SIZE_SELECTION)
+            }
+            sb.append(")")
+            sb.append(" OR ")
+            // video
+            sb.append("(")
+            sb.append(VIDEO_TYPE_SELECTION)
+            if (videoFilter.querySize) {
+                sb.andAppend(FILE_SIZE_SELECTION)
+            }
+            if (videoFilter.queryDuration) {
+                sb.andAppend(FILE_DURATION_SELECTION)
+            }
+            sb.append(")")
+            sb.toString()
+        }
     }
 
     open fun getSelectionArgs(): Array<String>? = when (supportMedia) {
-        SupportMedia.IMAGE -> null
+        SupportMedia.IMAGE -> mutableListOf<String>()
+            .apply {
+                if (imageFilter.querySize) {
+                    add(imageFilter.minSize.toString())
+                    add(imageFilter.maxSize.toString())
+                }
+            }
+            .toTypedArray()
+
         SupportMedia.VIDEO -> mutableListOf<String>()
             .apply {
+                if (videoFilter.querySize) {
+                    add(videoFilter.minSize.toString())
+                    add(videoFilter.maxSize.toString())
+                }
                 if (videoFilter.queryDuration) {
                     add(videoFilter.minDuration.toString())
                     add(videoFilter.maxDuration.toString())
                 }
             }.toTypedArray()
 
-        SupportMedia.IMAGE_AND_VIDEO -> mutableListOf(
-            MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE.toString(),
-            MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO.toString()
-        ).apply {
-            if (videoFilter.queryDuration) {
-                add(videoFilter.minDuration.toString())
-                add(videoFilter.maxDuration.toString())
+        SupportMedia.IMAGE_AND_VIDEO -> mutableListOf<String>()
+            .apply {
+                if (imageFilter.querySize) {
+                    add(imageFilter.minSize.toString())
+                    add(imageFilter.maxSize.toString())
+                }
+                if (videoFilter.querySize) {
+                    add(videoFilter.minSize.toString())
+                    add(videoFilter.maxSize.toString())
+                }
+                if (videoFilter.queryDuration) {
+                    add(videoFilter.minDuration.toString())
+                    add(videoFilter.maxDuration.toString())
+                }
             }
-        }
             .toTypedArray()
     }
 
@@ -86,9 +149,15 @@ open class Input(
             val duration = if (videoFilter.queryDuration) {
                 CursorUtil.getCursorLong(cursor, MediaStore.MediaColumns.DURATION) ?: VideoItem.DEFAULT_DURATION
             } else VideoItem.DEFAULT_DURATION
-            VideoItem(id, path, uri, type, duration)
+            val size = if (videoFilter.querySize) {
+                CursorUtil.getCursorLong(cursor, MediaStore.MediaColumns.SIZE) ?: BaseItem.DEFAULT_SIZE
+            } else BaseItem.DEFAULT_SIZE
+            VideoItem(id, path, uri, type, size, duration)
         } else {
-            PhotoItem(id, path, uri, type)
+            val size = if (videoFilter.querySize) {
+                CursorUtil.getCursorLong(cursor, MediaStore.MediaColumns.SIZE) ?: BaseItem.DEFAULT_SIZE
+            } else BaseItem.DEFAULT_SIZE
+            PhotoItem(id, path, uri, type, size)
         }
     }
 
@@ -105,10 +174,21 @@ open class Input(
     }
 
     fun String.isImageType(): Boolean {
-        return this.toLowerCase().startsWith("image/")
+        return this.lowercase(Locale.getDefault()).startsWith("image/")
     }
 
     fun String.isVideoType(): Boolean {
-        return this.toLowerCase().startsWith("video/")
+        return this.lowercase(Locale.getDefault()).startsWith("video/")
+    }
+
+    fun StringBuilder.andAppend(value: String) {
+        if (isNotEmpty()) {
+            append(" AND ")
+        }
+        append(value)
+    }
+
+    fun StringBuilder.toStringEmptyNull(): String? {
+        return if (isNotEmpty()) toString() else null
     }
 }

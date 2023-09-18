@@ -1,6 +1,5 @@
 package me.twc.photopicker.lib.data.filter
 
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import java.io.Serializable
 
 /**
@@ -13,5 +12,11 @@ data class VideoFilter(
     // 最短视屏时长
     val minDuration: Long = Long.MIN_VALUE,
     // 最长视屏时长
-    val maxDuration: Long = Long.MAX_VALUE
+    val maxDuration: Long = Long.MAX_VALUE,
+    // 是否查询视屏大小
+    val querySize: Boolean = false,
+    // 最小视屏大小
+    val minSize: Long = Long.MIN_VALUE,
+    // 最大视屏大小
+    val maxSize: Long = Long.MAX_VALUE
 ) : Serializable

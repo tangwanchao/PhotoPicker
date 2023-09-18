@@ -19,6 +19,12 @@ open class BaseItem(
     open val uri: Uri,
     // 文件类型
     open val type: String,
+    // 文件大小
+    open val size: Long = DEFAULT_SIZE,
     // 是否被选中
     open var isSelected: Boolean = false
-) : Parcelable
+) : Parcelable {
+    companion object{
+        const val DEFAULT_SIZE = 0L
+    }
+}
