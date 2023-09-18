@@ -4,7 +4,6 @@ import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import androidx.annotation.CallSuper
 import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.utils.CursorUtil
@@ -62,7 +61,7 @@ open class Input(
         if (path.isBlank()) return null
         if (type.isBlank()) return null
         if (!isSupportType(type)) return null
-        return SimpleItem(id, path, uri, type)
+        return PhotoItem(id, path, uri, type)
     }
 
     open fun isSupportType(type: String): Boolean = when (supportMedia) {

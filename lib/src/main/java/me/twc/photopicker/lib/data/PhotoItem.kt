@@ -9,7 +9,7 @@ import kotlinx.android.parcel.Parcelize
  */
 
 @Parcelize
-data class SimpleItem(
+data class PhotoItem(
     override val id: Long,
     override val path: String,
     override val uri: Uri,
