@@ -3,6 +3,7 @@
 2. 支持选择图片/视屏/图片及视屏
 3. 支持获取图片/视屏大小
 4. 支持获取视屏时长
+5. 支持不同的图片加载器
 
 
 # 待完成
@@ -11,14 +12,12 @@
 3. 是否支持点击条目跳转到预览
 4. 是否支持批量预览
 5. 是否支持压缩图片,压缩配置
-6. 异常图片配置
-7. 图片加载器
-8. 是否支持系统图片选择(https://developer.android.google.cn/training/data-storage/shared/photopicker?hl=zh-cn)
-9. 图片分页
-10. 图片插入
-11. 滑动选取
-12. 视屏预览帧
-13. 照片选择权限
+6. 是否支持系统图片选择(https://developer.android.google.cn/training/data-storage/shared/photopicker?hl=zh-cn)
+7. 图片分页 
+8. 图片插入 
+9. 滑动选取 
+10. 视屏预览帧 
+11. 照片选择权限
 
 # 已知问题
 1. 查询数量和系统图库显示数量不一致
