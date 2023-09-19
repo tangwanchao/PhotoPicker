@@ -17,10 +17,9 @@ data class VideoItem(
     override val type: String,
     override val size: Long = DEFAULT_SIZE,
     // 视屏时长
-    val duration: Long = DEFAULT_DURATION,
-    override var isSelected: Boolean = false
-) : BaseItem(id, path, uri, type, size, isSelected){
-    companion object{
+    val duration: Long = DEFAULT_DURATION
+) : BaseItem(id, path, uri, type, size) {
+    companion object {
         const val DEFAULT_DURATION = 0L
     }
 }
