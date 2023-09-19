@@ -97,41 +97,16 @@ open class Input(
 
     open fun getSelectionArgs(): Array<String>? = when (supportMedia) {
         SupportMedia.IMAGE -> mutableListOf<String>()
-            .apply {
-                if (imageFilter.querySize) {
-                    add(imageFilter.minSize.toString())
-                    add(imageFilter.maxSize.toString())
-                }
-            }
+            .apply(imageFilter::fillSelectionArgs)
             .toTypedArray()
 
         SupportMedia.VIDEO -> mutableListOf<String>()
-            .apply {
-                if (videoFilter.querySize) {
-                    add(videoFilter.minSize.toString())
-                    add(videoFilter.maxSize.toString())
-                }
-                if (videoFilter.queryDuration) {
-                    add(videoFilter.minDuration.toString())
-                    add(videoFilter.maxDuration.toString())
-                }
-            }.toTypedArray()
+            .apply(videoFilter::fillSelectionArgs)
+            .toTypedArray()
 
         SupportMedia.IMAGE_AND_VIDEO -> mutableListOf<String>()
-            .apply {
-                if (imageFilter.querySize) {
-                    add(imageFilter.minSize.toString())
-                    add(imageFilter.maxSize.toString())
-                }
-                if (videoFilter.querySize) {
-                    add(videoFilter.minSize.toString())
-                    add(videoFilter.maxSize.toString())
-                }
-                if (videoFilter.queryDuration) {
-                    add(videoFilter.minDuration.toString())
-                    add(videoFilter.maxDuration.toString())
-                }
-            }
+            .apply(imageFilter::fillSelectionArgs)
+            .apply(videoFilter::fillSelectionArgs)
             .toTypedArray()
     }
 

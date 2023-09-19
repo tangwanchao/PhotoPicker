@@ -13,4 +13,11 @@ data class ImageFilter(
     val minSize: Long = Long.MIN_VALUE,
     // 最大照片大小
     val maxSize: Long = Long.MAX_VALUE
-) : Serializable
+) : Serializable{
+    fun fillSelectionArgs(args:MutableList<String>){
+        if(querySize){
+            args.add(minSize.toString())
+            args.add(maxSize.toString())
+        }
+    }
+}
