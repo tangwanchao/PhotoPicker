@@ -2,12 +2,12 @@ package me.twc.photopicker.lib
 
 import android.content.Context
 import me.twc.photopicker.lib.data.Input
-import me.twc.photopicker.lib.data.BaseItem
 import me.twc.photopicker.lib.ui.PhotoPickerAdapter
 
 /**
  * @author 唐万超
  * @date 2023/09/08
+ *
  */
 object AlbumModel {
 

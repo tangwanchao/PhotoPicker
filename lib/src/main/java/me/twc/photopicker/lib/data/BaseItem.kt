@@ -7,8 +7,12 @@ import kotlinx.android.parcel.Parcelize
 /**
  * @author 唐万超
  * @date 2023/09/11
+ *
+ * 媒体条目
+ *
+ * @see [PhotoItem]
+ * @see [VideoItem]
  */
-
 @Parcelize
 open class BaseItem(
     // 数据库 id

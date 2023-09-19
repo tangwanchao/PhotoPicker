@@ -6,6 +6,8 @@ import kotlinx.android.parcel.Parcelize
 /**
  * @author 唐万超
  * @date 2023/09/11
+ *
+ * 照片条目
  */
 
 @Parcelize

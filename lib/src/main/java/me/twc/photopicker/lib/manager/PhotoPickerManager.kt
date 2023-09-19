@@ -6,6 +6,8 @@ import com.blankj.utilcode.util.Utils
 /**
  * @author 唐万超
  * @date 2023/09/12
+ *
+ * 库管理类
  */
 object PhotoPickerManager {
 

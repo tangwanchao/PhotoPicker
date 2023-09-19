@@ -2,10 +2,8 @@ package me.twc.photopicker
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
 import com.blankj.utilcode.util.PermissionUtils
@@ -13,18 +11,16 @@ import com.blankj.utilcode.util.PermissionUtils.SimpleCallback
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import me.twc.photopicker.databinding.ActMainBinding
-import me.twc.photopicker.lib.AlbumModel
 import me.twc.photopicker.lib.data.BaseItem
 import me.twc.photopicker.lib.data.Input
-import me.twc.photopicker.lib.data.filter.ImageFilter
-import me.twc.photopicker.lib.data.filter.VideoFilter
+import me.twc.photopicker.lib.data.filter.ImageSelectionFilter
+import me.twc.photopicker.lib.data.filter.VideoSelectionFilter
 import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.engine.ItemFilter
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.manager.PhotoPickerManager
 import me.twc.photopicker.lib.ui.PhotoPickerActivity
 import me.twc.photopicker.lib.utils.applySingleDebouncing500
-import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
 
@@ -56,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         val input = Input(
                             imageEngine = GlideEngine,
                             supportMedia = SupportMedia.IMAGE,
-                            videoFilter = VideoFilter(
+                            videoFilter = VideoSelectionFilter(
                                 queryDuration = false,
                                 minDuration = 6000L,
                                 maxDuration = 30000L,
@@ -64,7 +60,7 @@ class MainActivity : ComponentActivity() {
                                 minSize = 1024L * 1024L * 1L,
                                 maxSize = 1024L * 1024L * 2L
                             ),
-                            imageFilter = ImageFilter(
+                            imageFilter = ImageSelectionFilter(
                                 querySize = false,
                                 minSize = 1024L * 1024L * 5L,
                                 maxSize = 1024L * 1024L * 6L

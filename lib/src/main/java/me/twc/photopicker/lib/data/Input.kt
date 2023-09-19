@@ -6,8 +6,8 @@ import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
-import me.twc.photopicker.lib.data.filter.ImageFilter
-import me.twc.photopicker.lib.data.filter.VideoFilter
+import me.twc.photopicker.lib.data.filter.ImageSelectionFilter
+import me.twc.photopicker.lib.data.filter.VideoSelectionFilter
 import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.engine.ItemFilter
 import me.twc.photopicker.lib.enums.SupportMedia
@@ -25,8 +25,8 @@ import java.util.Locale
 open class Input(
     val imageEngine: ImageEngine,
     val supportMedia: SupportMedia,
-    val videoFilter: VideoFilter = VideoFilter(),
-    val imageFilter: ImageFilter = ImageFilter(),
+    val videoFilter: VideoSelectionFilter = VideoSelectionFilter(),
+    val imageFilter: ImageSelectionFilter = ImageSelectionFilter(),
     val itemFilter: ItemFilter? = null
 ) : Serializable {
 

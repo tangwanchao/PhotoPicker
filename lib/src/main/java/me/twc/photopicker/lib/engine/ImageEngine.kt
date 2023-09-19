@@ -8,6 +8,8 @@ import java.io.Serializable
 /**
  * @author 唐万超
  * @date 2023/09/12
+ *
+ * 图片加载引擎
  */
 interface ImageEngine : Serializable {
     /**

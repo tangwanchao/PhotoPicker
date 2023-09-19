@@ -6,6 +6,8 @@ import kotlinx.android.parcel.Parcelize
 /**
  * @author 唐万超
  * @date 2023/09/18
+ *
+ * 视屏条目
  */
 @Parcelize
 data class VideoItem(

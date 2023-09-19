@@ -1,12 +1,20 @@
 package me.twc.photopicker.lib.data.filter
 
+import android.content.ContentResolver
+import me.twc.photopicker.lib.engine.ItemFilter
 import java.io.Serializable
 
 /**
  * @author 唐万超
  * @date 2023/09/18
+ *
+ * 查询数据时,视屏的选择条件
+ *
+ * 这个是 [ContentResolver.query] 查询时的选择条件
+ *
+ * @see [ItemFilter]
  */
-data class VideoFilter(
+data class VideoSelectionFilter(
     // 是否查询视屏大小
     val querySize: Boolean = false,
     // 最小视屏大小
@@ -20,6 +28,10 @@ data class VideoFilter(
     // 最长视屏时长
     val maxDuration: Long = Long.MAX_VALUE,
 ) : Serializable {
+
+    /**
+     * 将选择参数填充到 args 中
+     */
     fun fillSelectionArgs(args: MutableList<String>) {
         if (querySize) {
             args.add(minSize.toString())
