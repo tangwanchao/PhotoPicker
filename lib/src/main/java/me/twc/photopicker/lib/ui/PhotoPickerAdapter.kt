@@ -83,7 +83,7 @@ class PhotoPickerAdapter(
 
         fun bind(itemDisplay: ItemDisplay) {
             itemView.tag = itemDisplay
-            mImageEngine.loadPhoto(itemView.context, itemDisplay.realItemData.uri, mImageView)
+            mImageEngine.load(itemView.context, itemDisplay.realItemData, mImageView)
             bindWithPayloadsTag(itemDisplay)
         }
 

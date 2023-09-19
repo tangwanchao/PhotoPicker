@@ -31,9 +31,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private object GlideEngine : ImageEngine {
-        override fun loadPhoto(context: Context, uri: Uri, imageView: ImageView) {
+        override fun load(context: Context, item: BaseItem, imageView: ImageView) {
             Glide.with(context)
-                .load(uri)
+                .load(item.uri)
                 .into(imageView)
         }
     }
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                             ),
                             itemFilter = object : ItemFilter {
                                 override fun filter(item: BaseItem): BaseItem? {
-                                    return if (item.type == "image/gif") item else null
+                                    return item
                                 }
                             }
                         )

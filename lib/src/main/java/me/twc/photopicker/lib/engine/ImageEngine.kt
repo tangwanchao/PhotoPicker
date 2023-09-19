@@ -1,19 +1,19 @@
 package me.twc.photopicker.lib.engine
 
 import android.content.Context
-import android.net.Uri
 import android.widget.ImageView
+import me.twc.photopicker.lib.data.BaseItem
 import java.io.Serializable
 
 /**
  * @author 唐万超
  * @date 2023/09/12
  *
- * 图片加载引擎
+ * 条目加载引擎
  */
 interface ImageEngine : Serializable {
     /**
-     * 加载图片
+     * 加载条目数据到 [imageView]
      */
-    fun loadPhoto(context: Context, uri: Uri, imageView: ImageView)
+    fun load(context: Context, item: BaseItem, imageView: ImageView)
 }
