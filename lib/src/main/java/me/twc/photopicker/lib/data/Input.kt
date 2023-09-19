@@ -9,6 +9,7 @@ import android.provider.MediaStore
 import me.twc.photopicker.lib.data.filter.ImageFilter
 import me.twc.photopicker.lib.data.filter.VideoFilter
 import me.twc.photopicker.lib.engine.ImageEngine
+import me.twc.photopicker.lib.engine.ItemFilter
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.utils.CursorUtil
 import java.io.Serializable
@@ -25,7 +26,8 @@ open class Input(
     val imageEngine: ImageEngine,
     val supportMedia: SupportMedia,
     val videoFilter: VideoFilter = VideoFilter(),
-    val imageFilter: ImageFilter = ImageFilter()
+    val imageFilter: ImageFilter = ImageFilter(),
+    val itemFilter: ItemFilter? = null
 ) : Serializable {
 
     companion object {
@@ -120,7 +122,7 @@ open class Input(
         if (path.isBlank()) return null
         if (type.isBlank()) return null
         if (!isSupportType(type)) return null
-        return if (type.isVideoType()) {
+        val item = if (type.isVideoType()) {
             val duration = if (videoFilter.queryDuration) {
                 CursorUtil.getCursorLong(cursor, MediaStore.MediaColumns.DURATION) ?: VideoItem.DEFAULT_DURATION
             } else VideoItem.DEFAULT_DURATION
@@ -134,6 +136,7 @@ open class Input(
             } else BaseItem.DEFAULT_SIZE
             PhotoItem(id, path, uri, type, size)
         }
+        return if (itemFilter != null) itemFilter.filter(item) else item
     }
 
     open fun isSupportType(type: String): Boolean = when (supportMedia) {

@@ -14,10 +14,12 @@ import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 import me.twc.photopicker.databinding.ActMainBinding
 import me.twc.photopicker.lib.AlbumModel
+import me.twc.photopicker.lib.data.BaseItem
 import me.twc.photopicker.lib.data.Input
 import me.twc.photopicker.lib.data.filter.ImageFilter
 import me.twc.photopicker.lib.data.filter.VideoFilter
 import me.twc.photopicker.lib.engine.ImageEngine
+import me.twc.photopicker.lib.engine.ItemFilter
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.manager.PhotoPickerManager
 import me.twc.photopicker.lib.ui.PhotoPickerActivity
@@ -53,9 +55,9 @@ class MainActivity : ComponentActivity() {
                     override fun onGranted() {
                         val input = Input(
                             imageEngine = GlideEngine,
-                            supportMedia = SupportMedia.IMAGE_AND_VIDEO,
+                            supportMedia = SupportMedia.IMAGE,
                             videoFilter = VideoFilter(
-                                queryDuration = true,
+                                queryDuration = false,
                                 minDuration = 6000L,
                                 maxDuration = 30000L,
                                 querySize = true,
@@ -63,10 +65,15 @@ class MainActivity : ComponentActivity() {
                                 maxSize = 1024L * 1024L * 2L
                             ),
                             imageFilter = ImageFilter(
-                                querySize = true,
+                                querySize = false,
                                 minSize = 1024L * 1024L * 5L,
                                 maxSize = 1024L * 1024L * 6L
-                            )
+                            ),
+                            itemFilter = object : ItemFilter {
+                                override fun filter(item: BaseItem): BaseItem? {
+                                    return if (item.type == "image/gif") item else null
+                                }
+                            }
                         )
                         mPhotoPickerLauncher.launch(input)
                     }
