@@ -2,7 +2,7 @@ package me.twc.photopicker.lib.data
 
 import android.net.Uri
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * @author 唐万超
