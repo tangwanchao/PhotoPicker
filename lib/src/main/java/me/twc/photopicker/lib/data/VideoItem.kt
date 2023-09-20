@@ -1,7 +1,6 @@
 package me.twc.photopicker.lib.data
 
 import android.net.Uri
-import kotlinx.parcelize.Parcelize
 
 /**
  * @author 唐万超
@@ -9,7 +8,6 @@ import kotlinx.parcelize.Parcelize
  *
  * 视屏条目
  */
-@Parcelize
 data class VideoItem(
     override val id: Long,
     override val path: String,

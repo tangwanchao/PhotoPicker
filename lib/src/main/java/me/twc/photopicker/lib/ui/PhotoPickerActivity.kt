@@ -117,7 +117,7 @@ class PhotoPickerActivity : BaseActivity() {
 
         override fun parseResult(resultCode: Int, intent: Intent?): Output? {
             @Suppress("DEPRECATION")
-            return intent?.getParcelableExtra(KEY_EXTRA_OUTPUT) as? Output
+            return intent?.getSerializableExtra(KEY_EXTRA_OUTPUT) as? Output
         }
     }
 }
