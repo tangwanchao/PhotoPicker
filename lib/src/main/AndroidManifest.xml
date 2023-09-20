@@ -17,5 +17,11 @@
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|navigation"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PhotoPicker.Base" />
+
+        <activity
+            android:name=".ui.MediaPreviewActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|navigation"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PhotoPicker.Base" />
     </application>
 </manifest>
