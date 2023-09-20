@@ -12,6 +12,8 @@ open class BaseActivity : AppCompatActivity() {
 
     companion object {
         private const val DESIGN_WIDTH = 375
+        const val KEY_EXTRA_INPUT = "KEY_EXTRA_INPUT"
+        const val KEY_EXTRA_OUTPUT = "KEY_EXTRA_OUTPUT"
     }
 
     override fun getResources(): Resources {

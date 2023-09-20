@@ -24,11 +24,6 @@ import me.twc.photopicker.lib.utils.applySingleDebouncing500
  */
 class PhotoPickerActivity : BaseActivity() {
 
-    companion object {
-        private const val KEY_EXTRA_INPUT = "KEY_EXTRA_INPUT"
-        private const val KEY_EXTRA_OUTPUT = "KEY_EXTRA_OUTPUT"
-    }
-
     private val mBinding by lazy { PhotoPickerActPhotoPickerBinding.inflate(layoutInflater) }
     private lateinit var mInput: Input
     private lateinit var mAdapter: PhotoPickerAdapter
