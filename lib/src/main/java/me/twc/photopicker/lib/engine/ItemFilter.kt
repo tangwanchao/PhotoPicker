@@ -15,5 +15,9 @@ import java.io.Serializable
  * @see [VideoSelectionFilter]
  */
 interface ItemFilter : Serializable {
+
+    /**
+     * 注意:不要在此方法做耗时较长的操作,不然会导致首屏加载缓慢
+     */
     fun filter(item: BaseItem): BaseItem?
 }
