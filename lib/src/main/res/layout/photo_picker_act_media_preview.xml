@@ -37,16 +37,8 @@
         app:layout_constraintTop_toBottomOf="@+id/fl_action_bar"
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        app:layout_constraintBottom_toTopOf="@+id/scroll_view"
-        android:layout_height="0pt"/>
-
-    <ScrollView
         app:layout_constraintBottom_toTopOf="@+id/fl_bottom"
-        android:scrollbars="none"
-        android:orientation="horizontal"
-        android:id="@+id/scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="60pt"/>
+        android:layout_height="0pt"/>
 
     <FrameLayout
         android:paddingHorizontal="16pt"

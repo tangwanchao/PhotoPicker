@@ -51,12 +51,12 @@ class MainActivity : ComponentActivity() {
                     override fun onGranted() {
                         val input = Input(
                             imageEngine = GlideEngine,
-                            supportMedia = SupportMedia.IMAGE,
+                            supportMedia = SupportMedia.IMAGE_AND_VIDEO,
                             videoFilter = VideoSelectionFilter(
                                 queryDuration = false,
                                 minDuration = 6000L,
                                 maxDuration = 30000L,
-                                querySize = true,
+                                querySize = false,
                                 minSize = 1024L * 1024L * 1L,
                                 maxSize = 1024L * 1024L * 2L
                             ),
