@@ -1,8 +1,9 @@
 package me.twc.photopicker.lib.data.filter
 
 import android.content.ContentResolver
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import me.twc.photopicker.lib.engine.ItemFilter
-import java.io.Serializable
 
 /**
  * @author 唐万超
@@ -14,6 +15,7 @@ import java.io.Serializable
  *
  * @see [ItemFilter]
  */
+@Parcelize
 data class VideoSelectionFilter(
     // 是否查询视屏大小
     val querySize: Boolean = false,
@@ -27,7 +29,7 @@ data class VideoSelectionFilter(
     val minDuration: Long = Long.MIN_VALUE,
     // 最长视屏时长
     val maxDuration: Long = Long.MAX_VALUE,
-) : Serializable {
+) : Parcelable {
 
     /**
      * 将选择参数填充到 args 中

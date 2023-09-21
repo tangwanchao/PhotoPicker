@@ -1,7 +1,8 @@
 package me.twc.photopicker.lib.data
 
 import android.net.Uri
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
 /**
  * @author 唐万超
@@ -12,6 +13,7 @@ import java.io.Serializable
  * @see [PhotoItem]
  * @see [VideoItem]
  */
+@Parcelize
 open class BaseItem(
     // 数据库 id
     open val id: Long,
@@ -23,7 +25,7 @@ open class BaseItem(
     open val type: String,
     // 文件大小
     open val size: Long = DEFAULT_SIZE
-) : Serializable {
+) : Parcelable {
     companion object {
         const val DEFAULT_SIZE = 0L
     }

@@ -5,14 +5,15 @@ package me.twc.photopicker.lib.data
 import android.content.ContentUris
 import android.database.Cursor
 import android.net.Uri
+import android.os.Parcelable
 import android.provider.MediaStore
+import kotlinx.parcelize.Parcelize
 import me.twc.photopicker.lib.data.filter.ImageSelectionFilter
 import me.twc.photopicker.lib.data.filter.VideoSelectionFilter
 import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.engine.ItemFilter
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.utils.CursorUtil
-import java.io.Serializable
 import java.lang.StringBuilder
 import java.util.Locale
 
@@ -22,13 +23,14 @@ import java.util.Locale
  *
  * 启动图片选择器输入内容
  */
+@Parcelize
 open class Input(
     val imageEngine: ImageEngine,
     val supportMedia: SupportMedia,
     val videoFilter: VideoSelectionFilter = VideoSelectionFilter(),
     val imageFilter: ImageSelectionFilter = ImageSelectionFilter(),
     val itemFilter: ItemFilter? = null
-) : Serializable {
+) : Parcelable {
 
     companion object {
         const val EXTERNAL = "external"

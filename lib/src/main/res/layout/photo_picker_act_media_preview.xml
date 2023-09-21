@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2C2C2C">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#2C2C2C"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <FrameLayout
         android:id="@+id/fl_action_bar"
@@ -15,12 +15,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/iv_close"
+            android:id="@+id/iv_back"
             android:layout_width="48pt"
             android:layout_height="48pt"
             android:padding="10pt"
             android:scaleType="fitXY"
-            android:src="@drawable/photo_picker_ic_close_white"
+            android:src="@drawable/photo_picker_ic_back_white"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -30,19 +30,23 @@
             android:layout_gravity="center"
             android:textColor="@color/photo_picker_white"
             android:textSize="17pt"
-            tools:text="选择照片" />
+            tools:text="3/13" />
     </FrameLayout>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0pt"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/fl_bottom"
+    <androidx.viewpager2.widget.ViewPager2
         app:layout_constraintTop_toBottomOf="@+id/fl_action_bar"
-        app:spanCount="4" />
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        app:layout_constraintBottom_toTopOf="@+id/scroll_view"
+        android:layout_height="0pt"/>
+
+    <ScrollView
+        app:layout_constraintBottom_toTopOf="@+id/fl_bottom"
+        android:scrollbars="none"
+        android:orientation="horizontal"
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="60pt"/>
 
     <FrameLayout
         android:paddingHorizontal="16pt"
@@ -53,25 +57,13 @@
         android:background="#292929">
 
         <TextView
-            android:id="@+id/tv_preview"
-            android:paddingVertical="5pt"
-            android:paddingHorizontal="16pt"
-            android:text="预览(0)"
-            android:textSize="17pt"
-            android:textColor="@color/text_color_btn"
-            android:layout_gravity="start|center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:ignore="HardcodedText" />
-
-        <TextView
             android:id="@+id/tv_send"
             android:paddingVertical="5pt"
             android:paddingHorizontal="16pt"
-            android:background="@drawable/bg_btn_selector"
+            android:background="@drawable/bg_btn_green"
             android:text="发送(0)"
             android:textSize="17pt"
-            android:textColor="@color/text_color_btn"
+            android:textColor="@color/photo_picker_white"
             android:layout_gravity="end|center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

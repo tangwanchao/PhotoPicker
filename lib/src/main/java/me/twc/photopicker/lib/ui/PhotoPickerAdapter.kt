@@ -18,7 +18,8 @@ import me.twc.photopicker.lib.widget.TextRadioButton
  */
 class PhotoPickerAdapter(
     private val mImageEngine: ImageEngine,
-    private val mItemDataList: MutableList<ItemDisplay> = mutableListOf()
+    private val mItemDataList: MutableList<ItemDisplay> = mutableListOf(),
+    private val mOnSelectedCountChangeListener: ((count: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<PhotoPickerAdapter.PhotoPickerViewHolder>() {
 
     private val mPayloadsTag = Any()
@@ -78,6 +79,7 @@ class PhotoPickerAdapter(
                     itemDisplay.number = 0
                     notifyItemChanged(itemDisplay.position, mPayloadsTag)
                 }
+                mOnSelectedCountChangeListener?.invoke(mSelectedItems.size)
             }
         }
 

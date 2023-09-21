@@ -1,6 +1,7 @@
 package me.twc.photopicker.lib.data
 
 import android.net.Uri
+import kotlinx.parcelize.Parcelize
 
 /**
  * @author 唐万超
@@ -8,6 +9,7 @@ import android.net.Uri
  *
  * 照片条目
  */
+@Parcelize
 data class PhotoItem(
     override val id: Long,
     override val path: String,

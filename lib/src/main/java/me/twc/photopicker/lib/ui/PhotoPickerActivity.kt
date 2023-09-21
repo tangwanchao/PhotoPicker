@@ -1,6 +1,8 @@
 package me.twc.photopicker.lib.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -12,6 +14,7 @@ import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.PermissionUtils
 import com.blankj.utilcode.util.ToastUtils
 import me.twc.photopicker.lib.AlbumModel
+import me.twc.photopicker.lib.data.BaseItem
 import me.twc.photopicker.lib.data.Input
 import me.twc.photopicker.lib.data.Output
 import me.twc.photopicker.lib.databinding.PhotoPickerActPhotoPickerBinding
@@ -25,8 +28,10 @@ import me.twc.photopicker.lib.utils.applySingleDebouncing500
 class PhotoPickerActivity : BaseActivity() {
 
     private val mBinding by lazy { PhotoPickerActPhotoPickerBinding.inflate(layoutInflater) }
+    private val mPreviewLauncher = registerForActivityResult(MediaPreviewActivity.Contract(), ::onPreviewResult)
     private lateinit var mInput: Input
     private lateinit var mAdapter: PhotoPickerAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +46,16 @@ class PhotoPickerActivity : BaseActivity() {
     //<editor-fold desc="初始化">
     @Suppress("DEPRECATION")
     private fun parseIntent(block: () -> Unit) {
-        val input = intent.getSerializableExtra(KEY_EXTRA_INPUT) as? Input
+        val input = intent.getParcelableExtra(KEY_EXTRA_INPUT) as? Input
         if (input == null) {
             finish()
             return
         }
         mInput = input
-        mAdapter = PhotoPickerAdapter(mInput.imageEngine)
+        mAdapter = PhotoPickerAdapter(
+            mInput.imageEngine,
+            mOnSelectedCountChangeListener = ::onSelectedCountChanged
+        )
         block()
     }
 
@@ -89,16 +97,60 @@ class PhotoPickerActivity : BaseActivity() {
         tvTitle.text = mInput.supportMedia.title
         recyclerView.addItemDecoration(VerticalSpaceItemDecoration())
         recyclerView.adapter = mAdapter
+        updateBottomTextViews(0)
     }
 
     private fun initListener() = mBinding.apply {
         @Suppress("DEPRECATION")
         ivClose.applySingleDebouncing500 { onBackPressed() }
+        tvPreview.applySingleDebouncing500 { onPreviewClick() }
+        tvSend.applySingleDebouncing500 { onSendClick() }
     }
 
+
+    //</editor-fold>
+
+    //<editor-fold desc="更新 UI">
+    @SuppressLint("SetTextI18n")
+    private fun updateBottomTextViews(count: Int) = mBinding.apply {
+        tvPreview.text = "预览($count)"
+        tvSend.text = "发送($count)"
+        tvPreview.isEnabled = count > 0
+        tvSend.isEnabled = count > 0
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="回调">
+    private fun onSelectedCountChanged(count: Int) {
+        updateBottomTextViews(count)
+    }
+
+    private fun onPreviewClick() {
+        val input = MediaPreviewActivity.Input(mInput.imageEngine,mAdapter.getSelectedItems())
+        mPreviewLauncher.launch(input)
+    }
+
+    private fun onPreviewResult(output: MediaPreviewActivity.Output?) {
+        if (output == null) return
+        complete(output.items)
+    }
+
+    private fun onSendClick() {
+        complete(mAdapter.getSelectedItems())
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="私有方法">
     private fun loadItems() {
         val items = AlbumModel.loadItems(this, mInput)
         mAdapter.setItemDataList(items)
+    }
+
+    private fun complete(items: List<BaseItem>) {
+        val resultIntent = Intent()
+        resultIntent.putExtra(KEY_EXTRA_OUTPUT, Output(items))
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
     }
     //</editor-fold>
 
@@ -112,7 +164,7 @@ class PhotoPickerActivity : BaseActivity() {
 
         override fun parseResult(resultCode: Int, intent: Intent?): Output? {
             @Suppress("DEPRECATION")
-            return intent?.getSerializableExtra(KEY_EXTRA_OUTPUT) as? Output
+            return intent?.getParcelableExtra(KEY_EXTRA_OUTPUT) as? Output
         }
     }
 }
