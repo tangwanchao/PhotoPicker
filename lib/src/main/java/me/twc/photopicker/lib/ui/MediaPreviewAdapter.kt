@@ -21,7 +21,8 @@ import me.twc.photopicker.lib.utils.applySingleDebouncing500
  */
 class MediaPreviewAdapter(
     private val mImageEngine: ImageEngine,
-    private val mItemDataList: List<BaseItem>
+    private val mItemDataList: List<BaseItem>,
+    private val mOnItemClickListener:()->Unit
 ) : RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder>() {
 
     override fun getItemCount(): Int = mItemDataList.size
@@ -58,6 +59,7 @@ class MediaPreviewAdapter(
         private var mPlayer: ExoPlayer? = null
 
         init {
+            view.applySingleDebouncing500 { mOnItemClickListener() }
             mIvPlay.applySingleDebouncing500 { onPlayClick() }
         }
 

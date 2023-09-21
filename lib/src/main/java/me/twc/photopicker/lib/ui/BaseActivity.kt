@@ -1,8 +1,15 @@
 package me.twc.photopicker.lib.ui
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.res.Resources
+import android.graphics.Color
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.blankj.utilcode.util.AdaptScreenUtils
+import com.blankj.utilcode.util.Utils
 
 /**
  * @author 唐万超
@@ -40,5 +47,28 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun Resources.getWantXdpi(): Float {
         return this.displayMetrics.widthPixels * 72f / DESIGN_WIDTH
+    }
+
+    @SuppressLint("InternalInsetResource")
+    fun getAdaptStateBarHeight():Int{
+        val resources = Utils.getApp().resources
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        return resources.getDimensionPixelSize(resourceId)
+    }
+
+    fun layoutFullScreen(isAppearanceLightStatusBars:Boolean = false){
+        WindowCompat.setDecorFitsSystemWindows(window,false)
+        window.statusBarColor = Color.TRANSPARENT
+        val windowInsert = WindowCompat.getInsetsController(window,window.decorView)
+        windowInsert.isAppearanceLightStatusBars = isAppearanceLightStatusBars
+    }
+
+    fun applyStateBarHeight(block:(topInset:Int)->Unit){
+        window.decorView.setOnApplyWindowInsetsListener(View.OnApplyWindowInsetsListener { _, insets ->
+            val insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets, window.decorView)
+            val topInset = insetsCompat.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars())
+            block(topInset.top)
+            return@OnApplyWindowInsetsListener insets
+        })
     }
 }

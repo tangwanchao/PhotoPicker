@@ -1,15 +1,17 @@
 package me.twc.photopicker.lib.ui
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.animation.AccelerateInterpolator
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.core.animation.addListener
+import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.blankj.utilcode.util.BarUtils
 import kotlinx.parcelize.Parcelize
 import me.twc.photopicker.lib.data.BaseItem
 import me.twc.photopicker.lib.databinding.PhotoPickerActMediaPreviewBinding
@@ -29,9 +31,11 @@ class MediaPreviewActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = Color.parseColor("#333333")
-        BarUtils.setStatusBarLightMode(this, false)
         setContentView(mBinding.root)
+        layoutFullScreen()
+        applyStateBarHeight { stateBarHeight ->
+            mBinding.flActionBar.setPadding(0, stateBarHeight, 0, 0)
+        }
         parseIntent {
             initView()
             initListener()
@@ -52,7 +56,7 @@ class MediaPreviewActivity : BaseActivity() {
     //<editor-fold desc="初始化">
     private fun initView() = mBinding.apply {
         updateTitle()
-        mAdapter = MediaPreviewAdapter(mInput.imageEngine, mInput.items)
+        mAdapter = MediaPreviewAdapter(mInput.imageEngine, mInput.items, ::onItemClick)
         viewPager.adapter = mAdapter
         updateBottomTextViews()
     }
@@ -79,11 +83,46 @@ class MediaPreviewActivity : BaseActivity() {
     private fun updateBottomTextViews() = mBinding.apply {
         tvSend.text = "发送(${mInput.items.size})"
     }
+
+    private fun changeTopAndBottomBarVisibility() = mBinding.apply {
+        if (flActionBar.tag != null) return@apply
+        flActionBar.tag = ""
+        val preIsVisible = flActionBar.isVisible
+        if (!preIsVisible) {
+            flActionBar.isVisible = true
+            flBottom.isVisible = true
+        }
+        val topHeight = flActionBar.height
+        val botHeight = flBottom.height
+        val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
+        valueAnimator.addUpdateListener {
+            var value = it.animatedValue as Float
+            if(!preIsVisible){
+                value = 1f - value
+            }
+            flActionBar.translationY = -(topHeight * value)
+            flBottom.translationY = botHeight * value
+        }
+        valueAnimator.addListener(onEnd = {
+            flActionBar.tag = null
+            if (preIsVisible) {
+                flActionBar.isVisible = false
+                flBottom.isVisible = false
+            }
+        })
+        valueAnimator.interpolator = AccelerateInterpolator()
+        valueAnimator.duration = 300L
+        valueAnimator.start()
+    }
     //</editor-fold>
 
     //<editor-fold desc="回调">
     private fun onSendClick() {
         complete()
+    }
+
+    private fun onItemClick() {
+        changeTopAndBottomBarVisibility()
     }
     //</editor-fold>
 

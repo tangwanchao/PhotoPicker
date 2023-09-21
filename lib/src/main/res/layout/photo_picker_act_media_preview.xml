@@ -7,10 +7,17 @@
     android:background="#2C2C2C"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <FrameLayout
         android:id="@+id/fl_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="48pt"
+        android:layout_height="wrap_content"
         android:background="#333333"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -32,13 +39,6 @@
             android:textSize="17pt"
             tools:text="3/13" />
     </FrameLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
-        app:layout_constraintTop_toBottomOf="@+id/fl_action_bar"
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        app:layout_constraintBottom_toTopOf="@+id/fl_bottom"
-        android:layout_height="0pt"/>
 
     <FrameLayout
         android:paddingHorizontal="16pt"
