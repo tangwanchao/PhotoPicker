@@ -11,6 +11,8 @@ import java.io.Serializable
  *
  * 查询数据后对数据进行赛选过滤
  *
+ * 注意: ItemFilter 子类必须保证能够序列化
+ *
  * @see [ImageSelectionFilter]
  * @see [VideoSelectionFilter]
  */
