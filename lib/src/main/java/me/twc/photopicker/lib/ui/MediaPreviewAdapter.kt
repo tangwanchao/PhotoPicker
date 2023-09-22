@@ -40,16 +40,16 @@ class MediaPreviewAdapter(
     }
 
     override fun onViewAttachedToWindow(holder: MediaPreviewViewHolder) {
-        holder.onAttach()
+        holder.changeToVideoPreviewStartState()
     }
 
     override fun onViewDetachedFromWindow(holder: MediaPreviewViewHolder) {
-        holder.onDetached()
+        holder.changeToViewPreviewStopState()
     }
 
     override fun onViewRecycled(holder: MediaPreviewViewHolder) {
         super.onViewRecycled(holder)
-        holder.onRelease()
+        holder.changeToViewPreviewStopState()
     }
 
     inner class MediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -72,24 +72,17 @@ class MediaPreviewAdapter(
             videoRelease()
         }
 
-        fun onAttach() {
+        fun changeToVideoPreviewStartState() {
             if (isVideoItem()) {
                 mImageView.isVisible = true
                 mIvPlay.isVisible = true
             }
         }
 
-
-        fun onDetached() {
+        fun changeToViewPreviewStopState() {
             if (isVideoItem()) {
                 videoRelease()
                 removePlayerView()
-            }
-        }
-
-        fun onRelease() {
-            if (isVideoItem()) {
-                videoRelease()
             }
         }
 

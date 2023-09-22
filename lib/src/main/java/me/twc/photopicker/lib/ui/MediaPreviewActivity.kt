@@ -45,12 +45,12 @@ class MediaPreviewActivity : BaseActivity() {
 
     override fun onStart() {
         super.onStart()
-        getCurrentViewHolder()?.onAttach()
+        getCurrentViewHolder()?.changeToVideoPreviewStartState()
     }
 
     override fun onStop() {
         super.onStop()
-        getCurrentViewHolder()?.onDetached()
+        getCurrentViewHolder()?.changeToViewPreviewStopState()
     }
 
     @Suppress("DEPRECATION")
