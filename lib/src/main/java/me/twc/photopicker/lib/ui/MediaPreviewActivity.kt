@@ -11,6 +11,7 @@ import android.view.animation.AccelerateInterpolator
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.animation.addListener
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import kotlinx.parcelize.Parcelize
 import me.twc.photopicker.lib.data.BaseItem
@@ -40,6 +41,16 @@ class MediaPreviewActivity : BaseActivity() {
             initView()
             initListener()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getCurrentViewHolder()?.onAttach()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        getCurrentViewHolder()?.onDetached()
     }
 
     @Suppress("DEPRECATION")
@@ -97,7 +108,7 @@ class MediaPreviewActivity : BaseActivity() {
         val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
         valueAnimator.addUpdateListener {
             var value = it.animatedValue as Float
-            if(!preIsVisible){
+            if (!preIsVisible) {
                 value = 1f - value
             }
             flActionBar.translationY = -(topHeight * value)
@@ -127,6 +138,12 @@ class MediaPreviewActivity : BaseActivity() {
     //</editor-fold>
 
     //<editor-fold desc="私有方法">
+    private fun getCurrentViewHolder(): MediaPreviewAdapter.MediaPreviewViewHolder? {
+        val recyclerView = mBinding.viewPager.getChildAt(0) as RecyclerView
+        val viewHolder = recyclerView.findViewHolderForLayoutPosition(mBinding.viewPager.currentItem)
+        return viewHolder as? MediaPreviewAdapter.MediaPreviewViewHolder
+    }
+
     private fun complete() {
         val result = Intent()
         result.putExtra(KEY_EXTRA_OUTPUT, Output(mInput.items))
