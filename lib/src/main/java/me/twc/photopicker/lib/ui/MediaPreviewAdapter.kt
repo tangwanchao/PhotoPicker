@@ -66,9 +66,10 @@ class MediaPreviewAdapter(
 
         fun bind(itemData: BaseItem) {
             itemView.tag = itemData
-            videoRelease()
-            mImageEngine.load(itemView.context, itemData, mImageView)
+            mImageView.isVisible = true
             mIvPlay.isVisible = isVideoItem()
+            mImageEngine.load(itemView.context, itemData, mImageView)
+            videoRelease()
         }
 
         fun onAttach() {
@@ -78,9 +79,10 @@ class MediaPreviewAdapter(
             }
         }
 
+
         fun onDetached() {
             if (isVideoItem()) {
-                onRelease()
+                videoRelease()
                 removePlayerView()
             }
         }
