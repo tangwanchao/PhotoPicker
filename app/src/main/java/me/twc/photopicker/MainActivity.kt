@@ -43,42 +43,28 @@ class MainActivity : ComponentActivity() {
         setContentView(mBinding.root)
         PhotoPickerManager.init(application,GlideEngine)
         mBinding.btnLaunch.applySingleDebouncing500 {
-            PermissionUtils.permission(
-                Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.READ_MEDIA_VIDEO,
+            val input = Input(
+                supportMedia = SupportMedia.VIDEO,
+                videoFilter = VideoSelectionFilter(
+                    queryDuration = false,
+                    minDuration = 6000L,
+                    maxDuration = 30000L,
+                    querySize = false,
+                    minSize = 1024L * 1024L * 1L,
+                    maxSize = 1024L * 1024L * 2L
+                ),
+                imageFilter = ImageSelectionFilter(
+                    querySize = false,
+                    minSize = 1024L * 1024L * 5L,
+                    maxSize = 1024L * 1024L * 6L
+                ),
+                itemFilter = object : ItemFilter {
+                    override fun filter(item: BaseItem): BaseItem {
+                        return item
+                    }
+                }
             )
-                .callback(object : SimpleCallback {
-                    override fun onGranted() {
-                        val input = Input(
-                            supportMedia = SupportMedia.VIDEO,
-                            videoFilter = VideoSelectionFilter(
-                                queryDuration = false,
-                                minDuration = 6000L,
-                                maxDuration = 30000L,
-                                querySize = false,
-                                minSize = 1024L * 1024L * 1L,
-                                maxSize = 1024L * 1024L * 2L
-                            ),
-                            imageFilter = ImageSelectionFilter(
-                                querySize = false,
-                                minSize = 1024L * 1024L * 5L,
-                                maxSize = 1024L * 1024L * 6L
-                            ),
-                            itemFilter = object : ItemFilter {
-                                override fun filter(item: BaseItem): BaseItem {
-                                    return item
-                                }
-                            }
-                        )
-                        mPhotoPickerLauncher.launch(input)
-                    }
-
-                    override fun onDenied() {
-                        ToastUtils.showLong("onDenied")
-                    }
-
-                })
-                .request()
+            mPhotoPickerLauncher.launch(input)
         }
     }
 }
