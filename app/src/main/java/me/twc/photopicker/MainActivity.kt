@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                     override fun onGranted() {
                         val input = Input(
                             imageEngine = GlideEngine,
-                            supportMedia = SupportMedia.IMAGE_AND_VIDEO,
+                            supportMedia = SupportMedia.VIDEO,
                             videoFilter = VideoSelectionFilter(
                                 queryDuration = false,
                                 minDuration = 6000L,
@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                                 maxSize = 1024L * 1024L * 6L
                             ),
                             itemFilter = object : ItemFilter {
-                                override fun filter(item: BaseItem): BaseItem? {
+                                override fun filter(item: BaseItem): BaseItem {
                                     return item
                                 }
                             }

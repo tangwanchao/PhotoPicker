@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
@@ -22,7 +23,7 @@ import me.twc.photopicker.lib.utils.applySingleDebouncing500
 class MediaPreviewAdapter(
     private val mImageEngine: ImageEngine,
     private val mItemDataList: List<BaseItem>,
-    private val mOnItemClickListener:()->Unit
+    private val mOnItemClickListener: () -> Unit
 ) : RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder>() {
 
     override fun getItemCount(): Int = mItemDataList.size
@@ -54,7 +55,7 @@ class MediaPreviewAdapter(
     inner class MediaPreviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val mImageView = view.findViewById<ImageView>(R.id.iv_image)
-        private val mPlayerView = view.findViewById<PlayerView>(R.id.player_view)
+        private var mPlayerView: PlayerView? = null
         private val mIvPlay = view.findViewById<ImageView>(R.id.iv_play)
         private var mPlayer: ExoPlayer? = null
 
@@ -72,20 +73,15 @@ class MediaPreviewAdapter(
 
         fun onAttach() {
             if (isVideoItem()) {
-                videoPrepare()
-                mPlayerView.isVisible = true
                 mImageView.isVisible = true
                 mIvPlay.isVisible = true
             }
         }
 
         fun onDetached() {
-            //mPlayerView.isVisible = false
-            mIvPlay.isVisible = false
             if (isVideoItem()) {
-                videoPause()
-                videoSeekTo(0L)
-                videoStop()
+                onRelease()
+                removePlayerView()
             }
         }
 
@@ -101,16 +97,36 @@ class MediaPreviewAdapter(
 
         private fun onPlayClick() {
             if (!isVideoItem()) return
-            mPlayerView.isVisible = true
+            addPlayerView()
             mImageView.isVisible = false
             mIvPlay.isVisible = false
             ExoPlayer.Builder(itemView.context).build().apply {
                 mPlayer = this
-                mPlayerView.player = this
+                mPlayerView?.player = this
                 val mediaItem = MediaItem.fromUri((itemView.tag as VideoItem).uri)
                 setMediaItem(mediaItem)
                 videoPrepare()
                 videoPlay()
+            }
+        }
+
+        private fun addPlayerView() {
+            val root = itemView as ViewGroup
+            val playerView = root.children.find { it is PlayerView }
+            if (playerView != null) return
+            mPlayerView = PlayerView(itemView.context).apply {
+                useController = false
+            }
+            val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
+            root.addView(mPlayerView, 0, lp)
+        }
+
+        private fun removePlayerView() {
+            val root = itemView as ViewGroup
+            val playerView = root.children.find { it is PlayerView }
+            if (playerView != null) {
+                root.removeView(playerView)
             }
         }
 
@@ -123,10 +139,12 @@ class MediaPreviewAdapter(
             it.play()
         }
 
+        @Suppress("unused")
         private fun videoPause() = mPlayer.useIfCommandAvailable(ExoPlayer.COMMAND_PLAY_PAUSE) {
             it.pause()
         }
 
+        @Suppress("unused")
         private fun videoStop() = mPlayer.useIfCommandAvailable(ExoPlayer.COMMAND_STOP) {
             it.stop()
         }
@@ -136,7 +154,7 @@ class MediaPreviewAdapter(
             mPlayer = null
         }
 
-        @Suppress("SameParameterValue")
+        @Suppress("SameParameterValue","unused")
         private fun videoSeekTo(positionMs: Long) = mPlayer.useIfCommandAvailable(ExoPlayer.COMMAND_SEEK_IN_CURRENT_MEDIA_ITEM) {
             it.seekTo(positionMs)
         }
