@@ -11,7 +11,7 @@ import java.io.Serializable
  *
  * 条目加载引擎
  */
-interface ImageEngine : Serializable {
+interface ImageEngine {
     /**
      * 加载条目数据到 [imageView]
      */
