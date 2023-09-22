@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-        PhotoPickerManager.init(application)
+        PhotoPickerManager.init(application,GlideEngine)
         mBinding.btnLaunch.applySingleDebouncing500 {
             PermissionUtils.permission(
                 Manifest.permission.READ_MEDIA_IMAGES,
@@ -50,7 +50,6 @@ class MainActivity : ComponentActivity() {
                 .callback(object : SimpleCallback {
                     override fun onGranted() {
                         val input = Input(
-                            imageEngine = GlideEngine,
                             supportMedia = SupportMedia.VIDEO,
                             videoFilter = VideoSelectionFilter(
                                 queryDuration = false,

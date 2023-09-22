@@ -2,6 +2,7 @@ package me.twc.photopicker.lib.manager
 
 import android.app.Application
 import com.blankj.utilcode.util.Utils
+import me.twc.photopicker.lib.engine.ImageEngine
 
 /**
  * @author 唐万超
@@ -9,9 +10,19 @@ import com.blankj.utilcode.util.Utils
  *
  * 库管理类
  */
+@Suppress("unused")
 object PhotoPickerManager {
 
-    fun init(app: Application) {
+    private lateinit var mImageEngine: ImageEngine
+
+    fun init(app: Application, imageEngine: ImageEngine) {
         Utils.init(app)
+        mImageEngine = imageEngine
     }
+
+    fun setImageEngine(imageEngine: ImageEngine) {
+        mImageEngine = imageEngine
+    }
+
+    fun getImageEngine(): ImageEngine = mImageEngine
 }

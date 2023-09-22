@@ -10,7 +10,6 @@ import android.provider.MediaStore
 import kotlinx.parcelize.Parcelize
 import me.twc.photopicker.lib.data.filter.ImageSelectionFilter
 import me.twc.photopicker.lib.data.filter.VideoSelectionFilter
-import me.twc.photopicker.lib.engine.ImageEngine
 import me.twc.photopicker.lib.engine.ItemFilter
 import me.twc.photopicker.lib.enums.SupportMedia
 import me.twc.photopicker.lib.utils.CursorUtil
@@ -25,7 +24,6 @@ import java.util.Locale
  */
 @Parcelize
 open class Input(
-    val imageEngine: ImageEngine,
     val supportMedia: SupportMedia,
     val videoFilter: VideoSelectionFilter = VideoSelectionFilter(),
     val imageFilter: ImageSelectionFilter = ImageSelectionFilter(),

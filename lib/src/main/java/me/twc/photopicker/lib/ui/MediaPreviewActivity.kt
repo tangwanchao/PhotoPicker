@@ -16,7 +16,7 @@ import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import kotlinx.parcelize.Parcelize
 import me.twc.photopicker.lib.data.BaseItem
 import me.twc.photopicker.lib.databinding.PhotoPickerActMediaPreviewBinding
-import me.twc.photopicker.lib.engine.ImageEngine
+import me.twc.photopicker.lib.manager.PhotoPickerManager
 import me.twc.photopicker.lib.utils.applySingleDebouncing500
 
 /**
@@ -67,7 +67,7 @@ class MediaPreviewActivity : BaseActivity() {
     //<editor-fold desc="初始化">
     private fun initView() = mBinding.apply {
         updateTitle()
-        mAdapter = MediaPreviewAdapter(mInput.imageEngine, mInput.items, ::onItemClick)
+        mAdapter = MediaPreviewAdapter(PhotoPickerManager.getImageEngine(), mInput.items, ::onItemClick)
         viewPager.adapter = mAdapter
         updateBottomTextViews()
     }
@@ -154,7 +154,6 @@ class MediaPreviewActivity : BaseActivity() {
 
     @Parcelize
     data class Input(
-        val imageEngine: ImageEngine,
         val items: List<BaseItem>
     ) : Parcelable
 

@@ -19,6 +19,7 @@ import me.twc.photopicker.lib.data.Input
 import me.twc.photopicker.lib.data.Output
 import me.twc.photopicker.lib.databinding.PhotoPickerActPhotoPickerBinding
 import me.twc.photopicker.lib.enums.SupportMedia
+import me.twc.photopicker.lib.manager.PhotoPickerManager
 import me.twc.photopicker.lib.utils.applySingleDebouncing500
 
 /**
@@ -53,7 +54,7 @@ class PhotoPickerActivity : BaseActivity() {
         }
         mInput = input
         mAdapter = PhotoPickerAdapter(
-            mInput.imageEngine,
+            PhotoPickerManager.getImageEngine(),
             mOnSelectedCountChangeListener = ::onSelectedCountChanged
         )
         block()
@@ -126,7 +127,7 @@ class PhotoPickerActivity : BaseActivity() {
     }
 
     private fun onPreviewClick() {
-        val input = MediaPreviewActivity.Input(mInput.imageEngine,mAdapter.getSelectedItems())
+        val input = MediaPreviewActivity.Input(mAdapter.getSelectedItems())
         mPreviewLauncher.launch(input)
     }
 
