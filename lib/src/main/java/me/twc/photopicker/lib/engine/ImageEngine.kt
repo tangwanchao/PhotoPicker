@@ -3,7 +3,6 @@ package me.twc.photopicker.lib.engine
 import android.content.Context
 import android.widget.ImageView
 import me.twc.photopicker.lib.data.BaseItem
-import java.io.Serializable
 
 /**
  * @author 唐万超
