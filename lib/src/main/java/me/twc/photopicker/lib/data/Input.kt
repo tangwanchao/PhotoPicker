@@ -129,12 +129,12 @@ open class Input(
             val size = if (videoFilter.querySize) {
                 CursorUtil.getCursorLong(cursor, MediaStore.MediaColumns.SIZE) ?: BaseItem.DEFAULT_SIZE
             } else BaseItem.DEFAULT_SIZE
-            VideoItem(id, path, uri, type, size, duration)
+            VideoItem(id = id, path = path, uri = uri, type = type, duration = duration, size = size)
         } else {
             val size = if (videoFilter.querySize) {
                 CursorUtil.getCursorLong(cursor, MediaStore.MediaColumns.SIZE) ?: BaseItem.DEFAULT_SIZE
             } else BaseItem.DEFAULT_SIZE
-            PhotoItem(id, path, uri, type, size)
+            PhotoItem(id = id, path = path, uri = uri, type = type, size = size)
         }
         return if (itemFilter != null) itemFilter.filter(item) else item
     }

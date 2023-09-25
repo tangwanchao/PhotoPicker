@@ -16,4 +16,5 @@ data class PhotoItem(
     override val uri: Uri,
     override val type: String,
     override val size: Long = DEFAULT_SIZE,
-) : BaseItem(id, path, uri, type, size)
+    override var isOriginal: Boolean = DEFAULT_ORIGINAL
+) : BaseItem(id, path, uri, type, size, isOriginal)

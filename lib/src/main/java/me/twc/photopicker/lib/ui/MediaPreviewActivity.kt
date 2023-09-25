@@ -18,6 +18,7 @@ import me.twc.photopicker.lib.data.BaseItem
 import me.twc.photopicker.lib.databinding.PhotoPickerActMediaPreviewBinding
 import me.twc.photopicker.lib.manager.PhotoPickerManager
 import me.twc.photopicker.lib.utils.applySingleDebouncing500
+import me.twc.photopicker.lib.widget.RadioButton
 
 /**
  * @author 唐万超
@@ -69,6 +70,7 @@ class MediaPreviewActivity : BaseActivity() {
         updateTitle()
         mAdapter = MediaPreviewAdapter(PhotoPickerManager.getImageEngine(), mInput.items, ::onItemClick)
         viewPager.adapter = mAdapter
+        updateRadioButton()
         updateBottomTextViews()
     }
 
@@ -78,8 +80,16 @@ class MediaPreviewActivity : BaseActivity() {
         viewPager.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 updateTitle()
+                updateRadioButton()
             }
         })
+        radioButton.setCheckedChangedListener(object : RadioButton.CheckedChangedListener {
+            override fun onChanged(isChecked: Boolean) {
+                val item = mInput.items[viewPager.currentItem]
+                item.isOriginal = isChecked
+            }
+        })
+        llRadioButton.applySingleDebouncing500 { radioButton.isSelected = !radioButton.isSelected }
         tvSend.applySingleDebouncing500 { onSendClick() }
     }
     //</editor-fold>
@@ -88,6 +98,10 @@ class MediaPreviewActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
     private fun updateTitle() {
         mBinding.tvTitle.text = "${mBinding.viewPager.currentItem + 1}/${mInput.items.size}"
+    }
+
+    private fun updateRadioButton() {
+        mBinding.radioButton.isSelected = mInput.items[mBinding.viewPager.currentItem].isOriginal
     }
 
     @SuppressLint("SetTextI18n")

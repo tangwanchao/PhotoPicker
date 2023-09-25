@@ -24,9 +24,12 @@ open class BaseItem(
     // 文件类型
     open val type: String,
     // 文件大小
-    open val size: Long = DEFAULT_SIZE
+    open val size: Long = DEFAULT_SIZE,
+    // 是否是原图
+    open var isOriginal:Boolean = DEFAULT_ORIGINAL
 ) : Parcelable {
     companion object {
         const val DEFAULT_SIZE = 0L
+        const val DEFAULT_ORIGINAL = false
     }
 }
