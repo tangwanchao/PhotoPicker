@@ -38,12 +38,18 @@ open class Input(
         const val FILE_SIZE_SELECTION = "(${MediaStore.MediaColumns.SIZE}>=? AND ${MediaStore.MediaColumns.SIZE}<=?)"
     }
 
-    open fun getContentUri(): Uri = when (supportMedia) {
+    fun getContentUri(): Uri = when (supportMedia) {
         SupportMedia.IMAGE -> MediaStore.Images.Media.getContentUri(EXTERNAL)
         SupportMedia.VIDEO -> MediaStore.Video.Media.getContentUri(EXTERNAL)
         SupportMedia.IMAGE_AND_VIDEO -> MediaStore.Files.getContentUri(EXTERNAL)
     }
 
+    /**
+     * 返回需要查询哪些列
+     *
+     * 注意:
+     * 变更查询列时应该同步变更 [createItem]
+     */
     open fun getProjections(): Array<String>? = mutableListOf(
         MediaStore.MediaColumns._ID,
         MediaStore.MediaColumns.DATA,
@@ -54,6 +60,12 @@ open class Input(
         }
     }.toTypedArray()
 
+    /**
+     * 返回查询选择语句
+     *
+     * 注意:
+     * 变更查询选择语句后可能需要同步变更选择参数[getSelectionArgs]
+     */
     open fun getSelection(): String? = when (supportMedia) {
         SupportMedia.IMAGE -> {
             val sb = StringBuilder()
@@ -97,6 +109,12 @@ open class Input(
         }
     }
 
+    /**
+     * 返回查询选择语句参数
+     *
+     * 注意:
+     * 变更查询选择语句参数后可能需要同步变更查询选择语句 [getSelectionArgs]
+     */
     open fun getSelectionArgs(): Array<String>? = when (supportMedia) {
         SupportMedia.IMAGE -> mutableListOf<String>()
             .apply(imageFilter::fillSelectionArgs)
@@ -114,6 +132,17 @@ open class Input(
 
     open fun getQuerySortOrder(): String? = MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC"
 
+    /**
+     * 根据 [cursor] 获取当前行的信息,[cursor] 保证可用,只管查询即可
+     *
+     * 有哪些列可以查询参考 [getSelection]
+     *
+     * 如果重写了 [getSelection] 添加了新的查询列
+     * 可以使用新的数据类继承 [PhotoItem] or [VideoItem] 添加属性
+     *
+     * 注意:
+     * 重写此方法可能需要重写 [getSelection]
+     */
     open fun createItem(cursor: Cursor): BaseItem? {
         val id = CursorUtil.getCursorLong(cursor, MediaStore.MediaColumns._ID) ?: return null
         val path = CursorUtil.getCursorString(cursor, MediaStore.MediaColumns.DATA) ?: return null
