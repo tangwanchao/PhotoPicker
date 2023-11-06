@@ -10,6 +10,7 @@ import android.os.Parcelable
 import android.view.animation.AccelerateInterpolator
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.animation.addListener
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
@@ -34,10 +35,14 @@ class MediaPreviewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-        layoutFullScreen()
-        applyStateBarHeight { stateBarHeight ->
-            mBinding.flActionBar.setPadding(0, stateBarHeight, 0, 0)
+        layoutFullScreen {
+            val stateBarHeight = it.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navigationBarHeight = it.getInsets(WindowInsetsCompat.Type.navigationBars())
+            mBinding.flActionBar.setPadding(0, stateBarHeight.top, 0, 0)
+            mBinding.root.setPadding(0, 0, 0, navigationBarHeight.bottom)
+            return@layoutFullScreen it.toWindowInsets()
         }
+
         parseIntent {
             initView()
             initListener()

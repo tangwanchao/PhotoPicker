@@ -1,10 +1,10 @@
 package me.twc.photopicker.lib.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.res.Resources
 import android.graphics.Color
 import android.view.View
+import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -50,25 +50,25 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     @SuppressLint("InternalInsetResource")
-    fun getAdaptStateBarHeight():Int{
+    fun getAdaptStateBarHeight(): Int {
         val resources = Utils.getApp().resources
         val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
         return resources.getDimensionPixelSize(resourceId)
     }
 
-    fun layoutFullScreen(isAppearanceLightStatusBars:Boolean = false){
-        WindowCompat.setDecorFitsSystemWindows(window,false)
+    fun layoutFullScreen(
+        decorFitsSystemWindows: Boolean = false,
+        isAppearanceLightStatusBars: Boolean = false,
+        applyInsets: ((inset: WindowInsetsCompat) -> WindowInsets?)? = null
+    ) {
+        WindowCompat.setDecorFitsSystemWindows(window, decorFitsSystemWindows)
         window.statusBarColor = Color.TRANSPARENT
-        val windowInsert = WindowCompat.getInsetsController(window,window.decorView)
+        val windowInsert = WindowCompat.getInsetsController(window, window.decorView)
         windowInsert.isAppearanceLightStatusBars = isAppearanceLightStatusBars
-    }
 
-    fun applyStateBarHeight(block:(topInset:Int)->Unit){
         window.decorView.setOnApplyWindowInsetsListener(View.OnApplyWindowInsetsListener { _, insets ->
             val insetsCompat = WindowInsetsCompat.toWindowInsetsCompat(insets, window.decorView)
-            val topInset = insetsCompat.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.statusBars())
-            block(topInset.top)
-            return@OnApplyWindowInsetsListener insets
+            return@OnApplyWindowInsetsListener applyInsets?.invoke(insetsCompat) ?: insets
         })
     }
 }
