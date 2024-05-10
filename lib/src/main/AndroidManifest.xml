@@ -11,7 +11,7 @@
         android:name="android.permission.READ_MEDIA_VIDEO"
         android:minSdkVersion="33" />
 
-    <application>
+    <application android:requestLegacyExternalStorage="true">
         <activity
             android:name=".ui.PhotoPickerActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|navigation"
