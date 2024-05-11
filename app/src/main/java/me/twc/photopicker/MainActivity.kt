@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
         PhotoPickerManager.init(application,GlideEngine)
         mBinding.btnLaunch.applySingleDebouncing500 {
             val input = Input(
-                supportMedia = SupportMedia.VIDEO,
+                supportMedia = SupportMedia.IMAGE,
                 videoFilter = VideoSelectionFilter(
                     queryDuration = false,
                     minDuration = 6000L,

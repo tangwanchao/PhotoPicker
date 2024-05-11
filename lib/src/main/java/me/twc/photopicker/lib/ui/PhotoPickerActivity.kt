@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContract
+import androidx.core.content.ContextCompat
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.PermissionUtils
@@ -73,7 +74,7 @@ class PhotoPickerActivity : BaseActivity() {
                 }
             }
             // v14
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 permissions.add(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
             }
         } else {
@@ -84,17 +85,27 @@ class PhotoPickerActivity : BaseActivity() {
         PermissionUtils.permission(*permissions.toTypedArray())
             .callback(object : PermissionUtils.SimpleCallback {
                 override fun onGranted() {
-                    initView()
-                    loadItems()
-                    initListener()
+                    onPermissionGranted()
                 }
 
                 override fun onDenied() {
-                    ToastUtils.showLong("应用无读取权限")
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
+                        PermissionUtils.isGranted(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
+                    ) {
+                        onPermissionGranted()
+                    } else {
+                        ToastUtils.showLong("应用无读取权限")
+                    }
                 }
 
             })
             .request()
+    }
+
+    private fun onPermissionGranted() {
+        initView()
+        loadItems()
+        initListener()
     }
 
     private fun initView() = mBinding.apply {
