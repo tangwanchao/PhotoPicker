@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'me.twc.photopicker'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "me.twc.photopicker"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
