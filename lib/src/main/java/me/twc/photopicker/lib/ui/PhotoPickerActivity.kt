@@ -61,11 +61,9 @@ class PhotoPickerActivity : BaseActivity() {
     }
 
     private fun requestPermission() {
-        val appTargetSdkVersion = AppUtils.getAppTargetSdkVersion()
         val permissions = mutableListOf<String>()
-        if (appTargetSdkVersion >= Build.VERSION_CODES.TIRAMISU &&
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-        ) {
+        // v13
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             when (mInput.supportMedia) {
                 SupportMedia.IMAGE -> permissions.add(Manifest.permission.READ_MEDIA_IMAGES)
                 SupportMedia.VIDEO -> permissions.add(Manifest.permission.READ_MEDIA_VIDEO)
@@ -74,7 +72,12 @@ class PhotoPickerActivity : BaseActivity() {
                     permissions.add(Manifest.permission.READ_MEDIA_VIDEO)
                 }
             }
+            // v14
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE){
+                permissions.add(Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
+            }
         } else {
+            // v12
             permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
 
